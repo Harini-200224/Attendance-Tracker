@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Attendance Tracker</title>
+  <link rel="icon" href="Image/bg.jpg" />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('Image/bg.jpg') no-repeat center center/cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .tracker {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      border-radius: 15px;
+      padding: 30px 20px;
+      width: 90%;
+      max-width: 360px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      color: #fff;
+      text-align: center;
+    }
+
+    .tracker h2 {
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      padding: 10px;
+      width: 90%;
+      margin: 6px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .buttons {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-around;
+      gap: 10px;
+    }
+
+    .buttons button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .present-btn {
+      background-color: #27ae60;
+    }
+
+    .absent-btn {
+      background-color: #c0392b;
+    }
+
+    .entry-log {
+      text-align: left;
+      max-height: 150px;
+      overflow-y: auto;
+      margin-top: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.95rem;
+    }
+
+    .entry-log div {
+      margin: 4px 0;
+    }
+
+    .present-entry {
+      color: #2ecc71;
+    }
+
+    .absent-entry {
+      color: #e74c3c;
+    }
+
+    .totals {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      font-size: 1rem;
+    }
+
+    .total-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .total-item label {
+      font-size: 1rem;
+    }
+
+    .total-item input {
+      width: 45px;
+      text-align: center;
+      border-radius: 5px;
+      border: none;
+      padding: 5px;
+      font-size: 1rem;
+    }
+
+    /* Make it mobile friendly */
+    @media (max-width: 480px) {
+      .tracker {
+        padding: 20px 15px;
+      }
+      .buttons {
+        flex-direction: column;
+      }
+      .buttons button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="tracker">
+    <h2>TrackMyClass</h2>
+
+    <input type="text" id="nameInput" placeholder="Enter student name" />
+    <input type="number" id="numberInput" placeholder="Enter roll number (optional)" />
+
+    <div class="buttons">
+      <button class="present-btn" onclick="markAttendance('Present')">Present</button>
+      <button class="absent-btn" onclick="markAttendance('Absent')">Absent</button>
+    </div>
+
+    <div class="entry-log" id="log"></div>
+
+    <div class="totals">
+      <div class="total-item">
+        <label>Total Present:</label>
+        <input type="number" id="presentCount" value="0" onchange="updateManualCount('present')" />
+      </div>
+      <div class="total-item">
+        <label>Total Absent:</label>
+        <input type="number" id="absentCount" value="0" onchange="updateManualCount('absent')" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let presentCount = 0;
+    let absentCount = 0;
+
+    function markAttendance(status) {
+      const name = document.getElementById('nameInput').value.trim();
+      const number = document.getElementById('numberInput').value.trim();
+      const log = document.getElementById('log');
+
+      if (!name) {
+        alert('Please enter a name');
+        return;
+      }
+
+      const entry = document.createElement('div');
+      entry.className = status === 'Present' ? 'present-entry' : 'absent-entry';
+      entry.textContent = `${number ? `#${number} ` : ''}${name} - ${status}`;
+      log.prepend(entry);
+
+      if (status === 'Present') {
+        presentCount++;
+        document.getElementById('presentCount').value = presentCount;
+      } else {
+        absentCount++;
+        document.getElementById('absentCount').value = absentCount;
+      }
+
+      document.getElementById('nameInput').value = '';
+      document.getElementById('numberInput').value = '';
+    }
+
+    function updateManualCount(type) {
+      const value = parseInt(document.getElementById(type + 'Count').value) || 0;
+      if (type === 'present') {
+        presentCount = value;
+      } else {
+        absentCount = value;
+      }
+    }
+  </script>
+
+</body>
+</html>
